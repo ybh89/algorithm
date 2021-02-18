@@ -1,5 +1,8 @@
 package dataStructure;
 
+import java.util.HashSet;
+import java.util.Set;
+
 public class LinkedList<T> {
     private LinkedListNode head;
     private LinkedListNode tail;
@@ -95,6 +98,77 @@ public class LinkedList<T> {
         head = tail;
         tail = temp;
     }
+    
+    public void reverseByRecursion() {
+        LinkedListNode<T> curNode = head;
+        reverse2(curNode);
+
+        LinkedListNode<T> temp = head;
+        head = tail;
+        tail = temp;
+    }
+
+    public void reverse2(LinkedListNode<T> curNode) {
+        if(curNode == null) {
+            return;
+        }
+
+        LinkedListNode<T> temp = curNode.prev;
+        curNode.prev = curNode.next;
+        curNode.next = temp;
+
+        reverse2(curNode.prev);
+    }
+
+    /**
+     * 마지막 요소로 부터 n번째에 있는 노드를 찾는 함수
+     * 단, 리스트의 사이즈를 모른다고 가정.
+     * 시간 복잡도: O(n)
+     * 공간 복잡도: O(1)
+     */
+    public LinkedListNode<T> findFromLast(int n) {
+        LinkedListNode<T> leftNode = head, rightNode = head;
+
+        int count = 1;
+        while(rightNode.next != null) {
+            if(count < n) {
+                rightNode = rightNode.next;
+            }else {
+                rightNode = rightNode.next;
+                leftNode = leftNode.next;
+            }
+
+            count++;
+        }
+
+        return leftNode;
+    }
+
+    /**
+     * 리스트에서 중복된 노드 제거하기
+     * 단, 나중에 나온 노드를 제거해야한다.
+     * ex) 1->1->1->2->3->1->2   =>   1->2->3
+     */
+    public void removeDuplicates() {
+        LinkedListNode<T> curNode = head;
+        LinkedListNode<T> preNode = head;
+
+        Set<T> checker = new HashSet<>();
+
+        while (curNode != null) {
+            if(checker.contains(curNode.data)) {
+                if(!curNode.data.equals(curNode.prev.data)) {
+                    preNode.next = curNode;
+                    curNode.prev = preNode;
+                }
+
+            } else {
+                checker.add(curNode.data);
+
+            }
+            curNode = curNode.next;
+        }
+    }
 
     private LinkedListNode<T> goToIndex(int index) {
         LinkedListNode<T> curNode = head;
@@ -141,7 +215,7 @@ public class LinkedList<T> {
         list.add("a");
         list.add("b");
         list.add("c");
-        list.reverse();
+        System.out.println(list.findFromLast(3).data);
         System.out.println(list.getSize());
         list.print();
     }
