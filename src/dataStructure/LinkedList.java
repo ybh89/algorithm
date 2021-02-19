@@ -121,7 +121,7 @@ public class LinkedList<T> {
     }
 
     /**
-     * 마지막 요소로 부터 n번째에 있는 노드를 찾는 함수
+     * 문제: 마지막 요소로 부터 n번째에 있는 노드를 찾는 함수
      * 단, 리스트의 사이즈를 모른다고 가정.
      * 시간 복잡도: O(n)
      * 공간 복잡도: O(1)
@@ -145,29 +145,109 @@ public class LinkedList<T> {
     }
 
     /**
-     * 리스트에서 중복된 노드 제거하기
+     * 문제: 리스트에서 중복된 노드 제거하기
      * 단, 나중에 나온 노드를 제거해야한다.
      * ex) 1->1->1->2->3->1->2   =>   1->2->3
+     * ex) a a a b c b b => a b c
      */
     public void removeDuplicates() {
         LinkedListNode<T> curNode = head;
-        LinkedListNode<T> preNode = head;
+        LinkedListNode<T> preNode = null;
 
         Set<T> checker = new HashSet<>();
 
         while (curNode != null) {
             if(checker.contains(curNode.data)) {
-                if(!curNode.data.equals(curNode.prev.data)) {
-                    preNode.next = curNode;
-                    curNode.prev = preNode;
-                }
-
+                preNode.next = curNode.next;
             } else {
                 checker.add(curNode.data);
-
+                preNode = curNode;
             }
             curNode = curNode.next;
         }
+    }
+
+    /**
+     * 정렬된 리스트에서 중복되는 모든 노드를 제거하기
+     * ex) 1 -> 1 -> 2 -> 3 -> 3   =>  2
+     * 시간 복잡도: O(n)
+     * 공간 복잡도: O(1)
+     * 아이디어: 중복되는 구간을 두 포인트(dupStartNode, curNode)로 잡아 해당 포인트의 앞 뒤 노드를 연결한다.
+     */
+    public void removeAllDuplicates() {
+        LinkedListNode<T> curNode = head;
+        LinkedListNode<T> dupStartNode = head;
+
+        while(curNode != null) {
+            //curNode를 중복 구간의 마지막 노드로 이동
+            curNode = moveToLastDuplicatedNode(curNode);
+
+            //중복 구간의 노드들을 제거(중복 구간 앞뒤 노드들을 연결)
+            if(curNode != dupStartNode) {
+                removeDuplicatedUnit(dupStartNode, curNode);
+            }
+
+            //다음 작업 준비
+            curNode = curNode.next;
+            dupStartNode = curNode;
+        }
+    }
+
+    private LinkedListNode<T> moveToLastDuplicatedNode(LinkedListNode<T> curNode) {
+        if(curNode.next == null) {
+            return curNode;
+        }
+
+        while(curNode.next != null && curNode.data.equals(curNode.next.data)) {
+            curNode = curNode.next;
+        }
+
+        return curNode;
+    }
+
+    private void removeDuplicatedUnit(LinkedListNode<T> dupStartNode, LinkedListNode<T> curNode) {
+        if(dupStartNode.prev != null) {
+            dupStartNode.prev.next = curNode.next;
+        }
+
+        if(curNode.next != null) {
+            curNode.next.prev = dupStartNode.prev;
+
+            if(dupStartNode.prev == null) {
+                head = curNode.next;
+            }
+        }
+
+        if(dupStartNode.prev == null && curNode.next == null) {
+            head = null;
+        }
+    }
+
+    /**
+     * 원형 연결 리스트인지 검사하는 메서드
+     */
+    public boolean hasCircle() {
+        LinkedListNode<T> slow = head;
+        LinkedListNode<T> fast = head;
+
+        while (fast != null) {
+            if(head == null || fast.next == null || fast.next.next == null) {
+                return false;
+            }
+            slow = slow.next;
+            fast = fast.next.next;
+
+            if(slow == fast) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public void makeCircle() {
+        tail.next = head;
+        head.prev = tail;
     }
 
     private LinkedListNode<T> goToIndex(int index) {
@@ -212,11 +292,16 @@ public class LinkedList<T> {
 
     public static void main(String[] args) {
         LinkedList<String> list = new LinkedList();
-        list.add("a");
-        list.add("b");
-        list.add("c");
-        System.out.println(list.findFromLast(3).data);
-        System.out.println(list.getSize());
-        list.print();
+        list.add("1");
+        list.add("1");
+        list.add("3");
+        list.add("4");
+        list.add("4");
+        list.add("4");
+        list.add("4");
+        System.out.println(list.hasCircle());
+        list.makeCircle();
+        System.out.println(list.hasCircle());
+        //list.print();
     }
 }
