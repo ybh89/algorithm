@@ -250,6 +250,26 @@ public class LinkedList<T> {
         head.prev = tail;
     }
 
+    /**
+     * 원형 연결 리스트의 시작점을 찾는 메서드
+     * 예) 1 -> 2 -> 3-> 4-> 5 -> 3 이 주어진 경우 3을 찾아야 한다.
+     */
+    public LinkedListNode<T> findStartOfCircle() {
+        Set<LinkedListNode> set = new HashSet<>();
+        LinkedListNode<T> curNode = head;
+
+        while (curNode != null) {
+            if(set.contains(curNode)) {
+                return curNode;
+            } else {
+                set.add(curNode);
+                curNode = curNode.next;
+            }
+        }
+
+        return null;
+    }
+
     private LinkedListNode<T> goToIndex(int index) {
         LinkedListNode<T> curNode = head;
         for(int i = 0; i < index; i++) {
@@ -302,6 +322,7 @@ public class LinkedList<T> {
         System.out.println(list.hasCircle());
         list.makeCircle();
         System.out.println(list.hasCircle());
+        System.out.println(list.findStartOfCircle().data);
         //list.print();
     }
 }
