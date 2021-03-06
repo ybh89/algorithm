@@ -46,6 +46,7 @@ public class 하노이_탑_이동_순서 {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         N = sc.nextInt();
+        findShortestPath(N);
     }
 
     public static List findShortestPath(int N) {
@@ -63,9 +64,13 @@ public class 하노이_탑_이동_순서 {
         stackList.add(1,stack1);
         stackList.add(2,stack2);
         stackList.add(3,stack3);
+
+        backTracking(stackList, new ArrayList<Integer>(), 1, -1);
+
+        return null;
     }
 
-    public static void backTracking(List<Stack<Integer>> stackList, List<Integer> path, int stackNum) {
+    public static void backTracking(List<Stack<Integer>> stackList, List<Integer> path, int stackNum, int preStackNum) {
         // 종료 조건: 목표 스택3에 모든 요소가 있으면 종료
         if(stackList.get(3).size() == N) {
             System.out.println(path);
@@ -80,31 +85,53 @@ public class 하노이_탑_이동_순서 {
 
         path.add(stackNum);
 
-        Stack<Integer> otherStack1;
-        Stack<Integer> otherStack2;
+        Stack<Integer> otherStack1 = null;
+        Stack<Integer> otherStack2 = null;
         if(stackNum == 1) {
-            otherStack1 = stackList.get(2);
-            otherStack2 = stackList.get(3);
+            if(preStackNum != 2) {
+                otherStack1 = stackList.get(2);
+            }
+            if(preStackNum != 3) {
+                otherStack2 = stackList.get(3);
+            }
         } else if(stackNum == 2) {
-            otherStack1 = stackList.get(1);
-            otherStack2 = stackList.get(3);
+            if(preStackNum != 1) {
+                otherStack1 = stackList.get(1);
+            }
+            if(preStackNum != 3) {
+                otherStack2 = stackList.get(3);
+            }
         } else {
-            otherStack1 = stackList.get(1);
-            otherStack2 = stackList.get(2);
+            if(preStackNum != 1) {
+                otherStack1 = stackList.get(1);
+            }
+            if(preStackNum != 2) {
+                otherStack2 = stackList.get(2);
+            }
         }
 
         if(isPushable(curStack, otherStack1)) {
             otherStack1.push(curStack.pop());
-            backTracking(stackList, path);
+            backTracking(stackList, path, otherStack1 == stackList.get(1) ? 1 : 2, stackNum);
+            curStack.push(otherStack1.pop());
         }
         if(isPushable(curStack, otherStack2)) {
             otherStack2.push(curStack.pop());
+            backTracking(stackList, path, otherStack2 == stackList.get(3) ? 3 : 2, stackNum);
+            curStack.push(otherStack1.pop());
         }
 
 
     }
 
     private static boolean isPushable(Stack<Integer> curStack, Stack<Integer> targetStack) {
+        if(targetStack == null) {
+            return false;
+        }
+        if(targetStack.isEmpty()) {
+            return true;
+        }
+
         return curStack.peek() < targetStack.peek();
     }
 }
