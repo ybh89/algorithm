@@ -4,6 +4,7 @@ import java.util.Scanner;
 
 /**
  * 백준 15649
+ * 순열 - 중복 제거
  */
 public class N과_M_1 {
     public static void main(String[] args) {
