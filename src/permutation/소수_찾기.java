@@ -1,6 +1,7 @@
 package permutation;
 
-import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * 문제 설명
@@ -28,30 +29,48 @@ import java.util.Arrays;
 public class 소수_찾기 {
     public static void main(String[] args) {
         소수_찾기 o = new 소수_찾기();
-        o.solution("17");
+        System.out.println(o.solution("17"));
     }
     public int solution(String numbers) {
         int answer = 0;
-        printPermutation(0, numbers.split(""));
-        return answer;
+        Set<Integer> resultNumSet = new HashSet<>();
+        for(int i=1; i<=numbers.length(); i++) {
+            printPermutation(i, "", numbers, new HashSet<Integer>(), resultNumSet);
+        }
+        return resultNumSet.size();
     }
 
-    public void printPermutation(int index, String[] array) {
-        if(index == array.length) {
-            System.out.println(Arrays.toString(array));
+    private void printPermutation(int depth, String result, String numbers, Set<Integer> isVisit, Set<Integer> resultNumSet) {
+        //종료
+        if(depth == 0) {
+            int resultNum = Integer.parseInt(result);
+            if(isPrimeNumber(resultNum)) {
+                resultNumSet.add(resultNum);
+            }
             return;
         }
 
-        for(int i=index; i<array.length; i++) {
-            swap(array, index, i);
-            printPermutation(index+1, array);
-            swap(array, index, i);
+        //프로세스
+        for(int i=0; i<numbers.length(); i++) {
+            if(!isVisit.contains(i)) {
+                isVisit.add(i);
+                printPermutation(depth-1, result+numbers.charAt(i), numbers, isVisit, resultNumSet);
+                isVisit.remove(i);
+            }
         }
     }
 
-    public void swap(String[] array, int a, int b) {
-        String temp = array[a];
-        array[a] = array[b];
-        array[b] = temp;
+    private boolean isPrimeNumber(int number) {
+        if(number < 2) {
+            return false;
+        }
+
+        for(int i=2; i<number; i++) {
+            if(number%i == 0) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }
