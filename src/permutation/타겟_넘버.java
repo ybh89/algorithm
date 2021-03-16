@@ -34,7 +34,9 @@ public class 타겟_넘버 {
     public int solution(int[] numbers, int target) {
         타겟_넘버.numbers = numbers;
         타겟_넘버.target = target;
-        permutation(numbers.length, "");
+        //permutation(numbers.length, "");
+        dfs(0, numbers[0]);
+        dfs(0, -numbers[0]);
         return count;
     }
 
@@ -70,7 +72,18 @@ public class 타겟_넘버 {
         }
     }
 
-    private void dfs() {
+    private void dfs(int index, int result) {
+        //종료
+        if(index == numbers.length-1) {
+            if(result == target) {
+                count++;
+            }
 
+            return;
+        }
+
+        //프로세스
+        dfs(index+1, result + numbers[index+1]);
+        dfs(index+1, result - numbers[index+1]);
     }
 }
