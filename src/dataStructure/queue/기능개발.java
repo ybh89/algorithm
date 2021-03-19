@@ -1,4 +1,4 @@
-package dataStructure.stack;
+package dataStructure.queue;
 
 import java.util.*;
 
@@ -36,31 +36,29 @@ import java.util.*;
 public class 기능개발 {
     public static void main(String[] args) {
         기능개발 o = new 기능개발();
-        System.out.println(Arrays.toString(o.solution(new int[]{93, 30, 55}, new int[]{1, 30, 5})));
+        //System.out.println(Arrays.toString(o.solution(new int[]{93, 30, 55}, new int[]{1, 30, 5})));
+        System.out.println(Arrays.toString(o.solution(new int[]{95, 90, 99, 99, 80, 99}, new int[]{100, 100, 100, 100, 100, 100})));
     }
 
     public int[] solution(int[] progresses, int[] speeds) {
-        int[] answer = {};
         List<Integer> results = new ArrayList<>();
 
         int[] leftDays = new int[progresses.length];
-        Deque<Integer> stack = new ArrayDeque<>();
-        stack.push(0);
+        Queue<Integer> queue = new LinkedList<>();
 
         for(int i=0; i<progresses.length; i++) {
             leftDays[i] = (int)Math.ceil((100 - progresses[i]) / (double)speeds[i]);
 
-            if(stack.peek() < leftDays[i] || i == progresses.length-1) {
-                int count = 0;
-                while (!stack.isEmpty()) {
-                    stack.pop();
-                    count++;
-                }
-                stack.push(0);
+            if(queue.peek() == null || queue.peek() >= leftDays[i]) {
+                queue.offer(leftDays[i]);
+            } else if(queue.peek() < leftDays[i]) {
+                results.add(queue.size());
+                queue.clear();
+                queue.offer(leftDays[i]);
+            }
 
-                results.add(count);
-            } else {
-                stack.push(leftDays[i]);
+            if(i == progresses.length-1) {
+                results.add(queue.size());
             }
         }
 
