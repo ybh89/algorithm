@@ -36,7 +36,7 @@ import java.util.stream.IntStream;
 public class 모의고사 {
     public static void main(String[] args) {
         모의고사 o = new 모의고사();
-        System.out.println(Arrays.toString(o.solution(new int[]{1, 3, 2, 4, 2})));
+        System.out.println(Arrays.toString(o.solution(new int[]{4})));
     }
     public int[] solution(int[] answers) {
         final int[] giveUp1 = new int[]{1, 2, 3, 4, 5};
