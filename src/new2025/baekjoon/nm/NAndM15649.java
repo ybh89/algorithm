@@ -10,7 +10,7 @@ public class NAndM15649 {
         Scanner scanner = new Scanner(System.in);
         String[] inputs = scanner.nextLine().split(" ");
         NAndM15649 sol = new NAndM15649();
-        sol.permutationAsc(0, Integer.parseInt(inputs[0]), Integer.parseInt(inputs[1]), 1, new Stack<>());
+        sol.permutationDuplicate(0, Integer.parseInt(inputs[0]), Integer.parseInt(inputs[1]), new Stack<>());
         scanner.close();
     }
 
@@ -53,6 +53,24 @@ public class NAndM15649 {
         for (int i = start; i <= n; i++) {
             result.push(i);
             permutationAsc(depth + 1, n, m, i + 1, result);
+            result.pop();
+        }
+    }
+
+    // 중복있는 순열 15651
+    public void permutationDuplicate(int depth, int n, int m, Stack<Integer> result) {
+        if (depth == m) {
+            StringBuilder sb = new StringBuilder();
+            for (Integer i : result) {
+                sb.append(i).append(" ");
+            }
+            System.out.println(sb.toString().trim());
+            return;
+        }
+
+        for (int i = 1; i <= n; i++) {
+            result.push(i);
+            permutationDuplicate(depth+1, n, m, result);
             result.pop();
         }
     }
