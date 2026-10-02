@@ -7,12 +7,18 @@ public class _112 {
         if (root == null) {
             return false;
         }
-        bfs(root, targetSum, 0);
+        dfs(root, targetSum, 0);
         return result;
     }
 
-    public void bfs(TreeNode current, int targetSum, int currentSum) {
+    public void dfs(TreeNode current, int targetSum, int currentSum) {
         currentSum += current.val;
+
+        // 백트랙킹
+        if (currentSum > targetSum) {
+            return;
+        }
+
         if (isLeaf(current)) {
             if (currentSum == targetSum) {
                 result = true;
@@ -21,11 +27,11 @@ public class _112 {
         }
 
         if (current.left != null) {
-            bfs(current.left, targetSum, currentSum);
+            dfs(current.left, targetSum, currentSum);
         }
 
         if (current.right != null) {
-            bfs(current.right, targetSum, currentSum);
+            dfs(current.right, targetSum, currentSum);
         }
     }
 
