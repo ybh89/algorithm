@@ -1,4 +1,4 @@
-package new2026.leetcode.bfs;
+package new2026.leetcode.dfs;
 
 public class _112 {
     boolean result = false;
